@@ -208,18 +208,6 @@ input:focus, select:focus {
     transform: scale(1.05);
 }
 
-.tab.active::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 3px;
-    height: 3px;
-    background: var(--accent);
-    border-radius: 50%;
-}
-
 .tab:not(.active):hover {
     color: var(--text);
     background: var(--bg-hover);
@@ -227,6 +215,142 @@ input:focus, select:focus {
 
 .app-container {
     padding-bottom: 85px;
+}
+
+/* Стили для результатов рецепта в новом формате */
+.recipe-result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    transition: var(--transition);
+    gap: 15px;
+}
+
+.recipe-result-item:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent);
+}
+
+.recipe-result-main {
+    flex: 1;
+    min-width: 150px;
+}
+
+.recipe-result-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: var(--text);
+}
+
+.recipe-result-subtitle {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.recipe-result-calories {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.recipe-result-macros {
+    flex: 2;
+    display: flex;
+    justify-content: end;
+}
+
+.recipe-macros-line {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.recipe-macro-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    min-width: 70px;
+}
+
+.recipe-macro-value {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.recipe-macro-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.recipe-macro-item.protein .recipe-macro-value {
+    color: var(--protein);
+}
+
+.recipe-macro-item.carbs .recipe-macro-value {
+    color: var(--carbs);
+}
+
+.recipe-macro-item.fat .recipe-macro-value {
+    color: var(--fat);
+}
+
+.recipe-macro-item.calories .recipe-macro-value {
+    color: var(--accent);
+}
+
+/* Адаптивность для результатов рецепта */
+@media (max-width: 768px) {
+    .recipe-result-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        text-align: center;
+    }
+    
+    .recipe-result-main {
+        min-width: auto;
+    }
+    
+    .recipe-result-macros {
+        justify-content: center;
+    }
+    
+    .recipe-macros-line {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .recipe-result-item {
+        padding: 12px;
+    }
+    
+    .recipe-macros-line {
+        gap: 8px;
+    }
+    
+    .recipe-macro-item {
+        padding: 6px 8px;
+        min-width: 60px;
+    }
+    
+    .recipe-macro-value {
+        font-size: 0.9rem;
+    }
 }
 
 /* Списки продуктов в одну линию */
@@ -691,4 +815,20 @@ input:focus, select:focus {
 .ingredient-actions {
     display: flex;
     gap: 8px;
+}
+
+/* Стили для блока действий в результатах */
+.recipe-result-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+}
+
+/* Адаптивность для блока действий */
+@media (max-width: 768px) {
+    .recipe-result-actions {
+        align-self: center;
+        margin-top: 10px;
+    }
 }
