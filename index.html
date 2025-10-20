@@ -25,6 +25,10 @@
                     <i class="fas fa-database"></i>
                     <span>База продуктов</span>
                 </button>
+                <button class="tab" onclick="openTab('history')">
+                    <i class="fas fa-history"></i>
+                    <span>История</span>
+                </button>
             </div>
         </div>
 
@@ -181,30 +185,30 @@
             <div id="database" class="tab-content">
                 <div class="content-card">
                     <h2><i class="fas fa-database"></i> База продуктов</h2>
-                    <p>Здесь вы можете просмотреть и добавить продукты в базу данных</p>
+                    <p style="color: var(--text-light); margin-bottom: 15px; font-size: 0.9rem;">Здесь вы можете просмотреть и добавить продукты в базу данных</p>
                     
                     <div class="search-container">
                         <i class="fas fa-search"></i>
                         <input type="text" id="searchProduct" placeholder="Поиск продукта...">
                     </div>
 
-                    <div style="margin-top: 30px;">
-                        <h3 style="margin-bottom: 15px;">Добавить новый продукт</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <input type="text" id="newProductName" placeholder="Название продукта">
+                    <div class="add-product-compact">
+                        <h3 style="margin-bottom: 10px; font-size: 1rem; color: var(--text-light);">Добавить новый продукт</h3>
+                        <div class="compact-form-grid">
+                            <div class="form-group compact">
+                                <input type="text" id="newProductName" placeholder="Название">
                             </div>
-                            <div class="form-group">
-                                <input type="number" id="newProductProtein" step="0.1" placeholder="Белки (г)">
+                            <div class="form-group compact">
+                                <input type="number" id="newProductProtein" step="0.1" placeholder="Белки">
                             </div>
-                            <div class="form-group">
-                                <input type="number" id="newProductCarbs" step="0.1" placeholder="Углеводы (г)">
+                            <div class="form-group compact">
+                                <input type="number" id="newProductCarbs" step="0.1" placeholder="Углеводы">
                             </div>
-                            <div class="form-group">
-                                <input type="number" id="newProductFat" step="0.1" placeholder="Жиры (г)">
+                            <div class="form-group compact">
+                                <input type="number" id="newProductFat" step="0.1" placeholder="Жиры">
                             </div>
-                            <div class="form-group" style="display: flex; align-items: flex-end;">
-                                <button class="btn" onclick="addToDatabase()">
+                            <div class="form-group compact">
+                                <button class="btn btn-compact" onclick="addToDatabase()">
                                     <i class="fas fa-plus"></i>
                                     <span>Добавить</span>
                                 </button>
@@ -212,9 +216,37 @@
                         </div>
                     </div>
                     
-                    <div id="productsGrid" class="products-grid"></div>
+                    <div id="productsList" class="products-list">
+                        <!-- Продукты будут отображаться здесь в новом формате -->
+                    </div>
                 </div>
             </div>
+
+            <!-- Вкладка "История расчетов" -->
+            <div id="history" class="tab-content">
+                <div class="content-card">
+                    <h2><i class="fas fa-history"></i> История расчетов</h2>
+                    
+                    <div class="history-controls">
+                        <button class="btn" onclick="loadHistory()">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Обновить историю</span>
+                        </button>
+                        <button class="btn btn-danger" onclick="clearHistory()">
+                            <i class="fas fa-trash"></i>
+                            <span>Очистить всю историю</span>
+                        </button>
+                    </div>
+
+                    <div id="historyList" class="history-list">
+                        <div class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <p>Загрузка истории...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -230,7 +262,7 @@
     <script>
         // Конфигурация Supabase
         const SUPABASE_URL = "https://zsmsmpjqtpizotlsvzef.supabase.co"
-        const SUPABASE_ANON_KEY= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzbXNtcGpxdHBpem90bHN2emVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2NTI0NDgsImV4cCI6MjA3NjIyODQ0OH0.lCcqVqn7gi0IueXzqx3IaIrW1qLq7Lm3jPucsywp2rk"
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzbXNtcGpxdHBpem90bHN2emVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2NTI0NDgsImV4cCI6MjA3NjIyODQ0OH0.lCcqVqn7gi0IueXzqx3IaIrW1qLq7Lm3jPucsywp2rk"
         
         // Инициализация Supabase клиента
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -243,6 +275,7 @@
         document.addEventListener('DOMContentLoaded', async function() {
             await loadProductsFromSupabase();
             setupEventListeners();
+            await loadHistory();
         });
 
         // Настройка обработчиков событий
@@ -267,6 +300,8 @@
         // Загрузка продуктов из Supabase
         async function loadProductsFromSupabase() {
             try {
+                showNotification('Загрузка базы продуктов...', 'warning');
+                
                 const { data, error } = await supabase
                     .from('products')
                     .select('*')
@@ -274,16 +309,14 @@
 
                 if (error) {
                     console.error('Ошибка загрузки продуктов:', error);
-                    // Используем fallback данные
                     loadFallbackProducts();
                     return;
                 }
 
                 if (data && data.length > 0) {
                     products = data;
-                    showNotification('База продуктов загружена');
+                    showNotification(`Загружено ${data.length} продуктов`);
                 } else {
-                    // Если база пустая, загружаем начальные данные
                     await loadInitialProducts();
                 }
 
@@ -317,16 +350,16 @@
                     .insert(initialProducts)
                     .select();
 
-                if (error) {
-                    console.error('Ошибка загрузки начальных данных:', error);
-                    products = initialProducts;
-                } else {
-                    products = data;
-                    showNotification('Начальные продукты загружены в базу');
-                }
+                if (error) throw error;
+                
+                products = data;
+                showNotification('Начальные продукты загружены в базу');
+                
             } catch (error) {
-                console.error('Ошибка:', error);
+                console.error('Ошибка загрузки начальных данных:', error);
                 products = initialProducts;
+                populateProductSelects();
+                displayProducts();
             }
         }
 
@@ -340,7 +373,253 @@
                 { name: "Банан", protein: 1.5, carbs: 21.8, fat: 0.2 }
             ];
             showNotification('Используется локальная база данных', 'warning');
+            populateProductSelects();
+            displayProducts();
         }
+
+        // Отображение продуктов в базе (новый формат)
+        function displayProducts(filteredProducts = null) {
+            const list = document.getElementById('productsList');
+            const productsToShow = filteredProducts || products;
+            
+            if (!list) {
+                console.error('Элемент productsList не найден в DOM');
+                return;
+            }
+            
+            if (productsToShow.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>Продукты не найдены</h3>
+                        <p>Попробуйте изменить поисковый запрос</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            list.innerHTML = '';
+            
+            productsToShow.forEach(product => {
+                const calories = calculateCalories(product.protein, product.carbs, product.fat);
+                
+                const item = document.createElement('div');
+                item.className = 'product-item';
+                item.innerHTML = `
+                    <div class="product-main-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-calories">${calories} ккал</div>
+                    </div>
+                    <div class="product-macros-center">
+                        <div class="macros-line">
+                            <span class="macro-item protein">Б: ${product.protein}g</span>
+                            <span class="macro-item carbs">У: ${product.carbs}g</span>
+                            <span class="macro-item fat">Ж: ${product.fat}g</span>
+                        </div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-icon btn-danger" onclick="deleteProduct(${product.id}, '${product.name.replace(/'/g, "\\'")}')" title="Удалить продукт">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Удаление продукта
+        async function deleteProduct(productId, productName) {
+            if (!confirm(`Вы уверены, что хотите удалить продукт "${productName}"?`)) {
+                return;
+            }
+
+            try {
+                console.log(`Пытаемся удалить продукт с ID: ${productId}`);
+                const { error } = await supabase
+                    .from('products')
+                    .delete()
+                    .eq('id', productId);
+
+                if (error) {
+                    console.error('Ошибка Supabase при удалении:', error);
+                    throw error;
+                }
+
+                console.log('Продукт успешно удален из базы данных');
+                showNotification(`Продукт "${productName}" удален`);
+                await loadProductsFromSupabase(); // Перезагружаем список продуктов
+                
+            } catch (error) {
+                console.error('Ошибка удаления продукта:', error);
+                showNotification('Ошибка удаления продукта', 'error');
+            }
+        }
+
+        // Загрузка истории расчетов
+        async function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Загрузка истории...</p></div>';
+
+            try {
+                const { data, error } = await supabase
+                    .from('calculation_history')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+
+                if (error) throw error;
+
+                if (data.length === 0) {
+                    historyList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <p>История расчетов пуста</p>
+                            <p>Выполните расчеты, чтобы увидеть их здесь</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                displayHistory(data);
+                
+            } catch (error) {
+                console.error('Ошибка загрузки истории:', error);
+                historyList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Ошибка загрузки истории</p>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Отображение истории
+        function displayHistory(history) {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+
+            history.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                const date = new Date(item.timestamp).toLocaleString('ru-RU');
+                
+                let content = '';
+                if (item.type === 'single') {
+                    content = `
+                        <div class="history-content">
+                            <div class="history-product">${item.product} - ${item.weight}г</div>
+                            <div class="macros-grid compact">
+                                <div class="macro-card macro-protein">
+                                    <div>Белки</div>
+                                    <div class="macro-value">${item.result.protein}g</div>
+                                </div>
+                                <div class="macro-card macro-carbs">
+                                    <div>Углеводы</div>
+                                    <div class="macro-value">${item.result.carbs}g</div>
+                                </div>
+                                <div class="macro-card macro-fat">
+                                    <div>Жиры</div>
+                                    <div class="macro-value">${item.result.fat}g</div>
+                                </div>
+                                <div class="macro-card macro-calories">
+                                    <div>Калории</div>
+                                    <div class="macro-value">${item.result.calories}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (item.type === 'recipe') {
+                    content = `
+                        <div class="history-content">
+                            <div class="history-weight">Общий вес: ${item.total_weight}г</div>
+                            <div class="macros-grid compact">
+                                <div class="macro-card macro-protein">
+                                    <div>Белки</div>
+                                    <div class="macro-value">${item.result.per100g.protein}g</div>
+                                </div>
+                                <div class="macro-card macro-carbs">
+                                    <div>Углеводы</div>
+                                    <div class="macro-value">${item.result.per100g.carbs}g</div>
+                                </div>
+                                <div class="macro-card macro-fat">
+                                    <div>Жиры</div>
+                                    <div class="macro-value">${item.result.per100g.fat}g</div>
+                                </div>
+                                <div class="macro-card macro-calories">
+                                    <div>Калории</div>
+                                    <div class="macro-value">${item.result.per100g.calories}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                historyItem.innerHTML = `
+                    <div class="history-header">
+                        <div class="history-info">
+                            <div class="history-type">${item.type === 'single' ? 'Отдельный продукт' : 'Сложное блюдо'}</div>
+                            <div class="history-date">${date}</div>
+                        </div>
+                        <button class="btn-icon btn-danger" onclick="deleteHistoryItem(${item.id})" title="Удалить запись">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    ${content}
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+
+
+        // Удаление записи истории
+        async function deleteHistoryItem(historyId) {
+            if (!confirm('Вы уверены, что хотите удалить эту запись из истории?')) {
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('calculation_history')
+                    .delete()
+                    .eq('id', historyId);
+
+                if (error) throw error;
+
+                showNotification('Запись истории удалена');
+                await loadHistory(); // Перезагружаем историю
+                
+            } catch (error) {
+                console.error('Ошибка удаления записи истории:', error);
+                showNotification('Ошибка удаления записи истории', 'error');
+            }
+        }
+
+        // Очистка всей истории
+        async function clearHistory() {
+            if (!confirm('Вы уверены, что хотите очистить всю историю расчетов?')) {
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('calculation_history')
+                    .delete()
+                    .neq('id', 0);
+
+                if (error) throw error;
+
+                showNotification('История очищена');
+                await loadHistory();
+                
+            } catch (error) {
+                console.error('Ошибка очистки истории:', error);
+                showNotification('Ошибка очистки истории', 'error');
+            }
+        }
+
 
         // Функция для переключения вкладок
         function openTab(tabName) {
@@ -367,7 +646,13 @@
                     break;
                 }
             }
+
+            // Если открыли вкладку истории - обновляем ее
+            if (tabName === 'history') {
+                loadHistory();
+            }
         }
+
 
         // Заполнение выпадающих списков продуктами
         function populateProductSelects() {
@@ -393,7 +678,7 @@
 
         // Отображение продуктов в базе
         function displayProducts(filteredProducts = null) {
-            const grid = document.getElementById('productsGrid');
+            const grid = document.getElementById('productsList');
             const productsToShow = filteredProducts || products;
             
             if (productsToShow.length === 0) {
@@ -412,29 +697,27 @@
             productsToShow.forEach(product => {
                 const calories = calculateCalories(product.protein, product.carbs, product.fat);
                 
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="product-header">
+                const item = document.createElement('div');
+                item.className = 'product-item';
+                item.innerHTML = `
+                    <div class="product-main-info">
                         <div class="product-name">${product.name}</div>
-                        <div class="calories">${calories} ккал</div>
+                        <div class="product-calories">${calories} ккал</div>
                     </div>
-                    <div class="macros-grid">
-                        <div class="macro-card macro-protein">
-                            <div>Белки</div>
-                            <div class="macro-value">${product.protein}g</div>
+                    <div class="product-macros-center">
+                        <div class="macros-line">
+                            <span class="macro-item protein">Б: ${product.protein}g</span>
+                            <span class="macro-item carbs">У: ${product.carbs}g</span>
+                            <span class="macro-item fat">Ж: ${product.fat}g</span>
                         </div>
-                        <div class="macro-card macro-carbs">
-                            <div>Углеводы</div>
-                            <div class="macro-value">${product.carbs}g</div>
-                        </div>
-                        <div class="macro-card macro-fat">
-                            <div>Жиры</div>
-                            <div class="macro-value">${product.fat}g</div>
-                        </div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-icon btn-danger" onclick="deleteProduct(${product.id}, '${product.name.replace(/'/g, "\\'")}')" title="Удалить продукт">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 `;
-                grid.appendChild(card);
+                grid.appendChild(item);
             });
         }
 
