@@ -3,135 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор калорий</title>
+    <title>FitTrack</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-
-    <div class="container-tabs">
-        <div class="tabs">
-            <button class="tab active" onclick="openTab('single')">Отдельный продукт</button>
-            <button class="tab" onclick="openTab('recipe')">Сложное блюдо</button>
-            <button class="tab" onclick="openTab('database')">База продуктов</button>
+    <div class="app-container">
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="openTab('single')">
+                    <i class="fas fa-carrot"></i>
+                    <span>Продукт</span>
+                </button>
+                <button class="tab" onclick="openTab('recipe')">
+                    <i class="fas fa-utensils"></i>
+                    <span>Рецепт</span>
+                </button>
+                <button class="tab" onclick="openTab('database')">
+                    <i class="fas fa-database"></i>
+                    <span>База продуктов</span>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <div class="container">
-        <!-- Вкладка "Отдельный продукт" -->
         <div class="content">
+            <!-- Вкладка "Отдельный продукт" -->
             <div id="single" class="tab-content active">
-                <h2>Расчет для отдельного продукта</h2>
-                <div class="form-group">
-                    <label>Выберите продукт:</label>
-                    <select id="productSelect">
-                        <option value="">-- Выберите продукт --</option>
-                        <option value="custom">-- Ввести вручную --</option>
-                    </select>
-                </div>
-
-                <div id="customProduct" style="display: none;">
-                    <div class="form-group">
-                        <label>Название продукта:</label>
-                        <input type="text" id="productName" placeholder="Например: Яблоко">
+                <div class="content-card">
+                    <h2><i class="fas fa-carrot"></i> Расчет для отдельного продукта</h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Выберите продукт:</label>
+                            <div class="input-with-icon">
+                                <select id="productSelect">
+                                    <option value="">-- Выберите продукт --</option>
+                                    <option value="custom">-- Ввести вручную --</option>
+                                </select>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Вес продукта (граммы):</label>
+                            <div class="input-with-icon">
+                                <input type="number" id="weight" placeholder="100" value="100">
+                                <i class="fas fa-weight-hanging"></i>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Белки (г на 100г):</label>
-                        <input type="number" id="protein" step="0.1" placeholder="0.0">
-                    </div>
-                    <div class="form-group">
-                        <label>Углеводы (г на 100г):</label>
-                        <input type="number" id="carbs" step="0.1" placeholder="0.0">
-                    </div>
-                    <div class="form-group">
-                        <label>Жиры (г на 100г):</label>
-                        <input type="number" id="fat" step="0.1" placeholder="0.0">
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label>Вес продукта (граммы):</label>
-                    <input type="number" id="weight" placeholder="100">
-                </div>
+                    <div id="customProduct" style="display: none;">
+                        <h3 style="margin: 20px 0 15px; font-size: 1.2rem;">Данные продукта</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Название продукта:</label>
+                                <div class="input-with-icon">
+                                    <input type="text" id="productName" placeholder="Например: Яблоко">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Белки (г на 100г):</label>
+                                <div class="input-with-icon">
+                                    <input type="number" id="protein" step="0.1" placeholder="0.0">
+                                    <i class="fas fa-egg"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Углеводы (г на 100г):</label>
+                                <div class="input-with-icon">
+                                    <input type="number" id="carbs" step="0.1" placeholder="0.0">
+                                    <i class="fas fa-bread-slice"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Жиры (г на 100г):</label>
+                                <div class="input-with-icon">
+                                    <input type="number" id="fat" step="0.1" placeholder="0.0">
+                                    <i class="fas fa-cheese"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <button class="btn" onclick="calculateSingle()">Рассчитать калории</button>
+                    <button class="btn btn-block" onclick="calculateSingle()">
+                        <i class="fas fa-calculator"></i>
+                        <span>Рассчитать калории</span>
+                    </button>
 
-                <div id="singleResult" class="result" style="display: none;">
-                    <h3>Результат расчета:</h3>
-                    <div id="singleResultContent"></div>
+                    <div id="singleResult" class="result-card">
+                        <h3>Результат расчета:</h3>
+                        <div id="singleResultContent"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Вкладка "Сложное блюдо" -->
             <div id="recipe" class="tab-content">
-                <h2>Расчет для сложного блюда</h2>
-                
-                <div class="ingredient-inputs">
-                    <div class="form-group">
-                        <label>Ингредиент:</label>
-                        <select id="recipeProductSelect">
-                            <option value="">-- Выберите продукт --</option>
-                            <option value="custom">-- Ввести вручную --</option>
-                        </select>
-                    </div>
+                <div class="content-card">
+                    <h2><i class="fas fa-utensils"></i> Расчет для сложного блюда</h2>
                     
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Ингредиент:</label>
+                            <div class="input-with-icon">
+                                <select id="recipeProductSelect">
+                                    <option value="">-- Выберите продукт --</option>
+                                    <option value="custom">-- Ввести вручную --</option>
+                                </select>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Вес (г):</label>
+                            <div class="input-with-icon">
+                                <input type="number" id="recipeWeight" placeholder="100">
+                                <i class="fas fa-weight-hanging"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <button class="btn" onclick="addIngredient()">
+                                <i class="fas fa-plus"></i>
+                                <span>Добавить</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="customRecipeProduct" style="display: none; margin-top: 20px; padding: 20px; background: rgba(30,30,30,0.8); border-radius: 8px;">
+                        <h4 style="margin-bottom: 15px;">Данные продукта:</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <input type="text" id="customRecipeName" placeholder="Название">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="customRecipeProtein" step="0.1" placeholder="Белки">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="customRecipeCarbs" step="0.1" placeholder="Углеводы">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="customRecipeFat" step="0.1" placeholder="Жиры">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="ingredientsList" class="ingredients-list"></div>
+
                     <div class="form-group">
-                        <label>Вес (г):</label>
-                        <input type="number" id="recipeWeight" placeholder="100">
+                        <label>Общий вес готового блюда (граммы):</label>
+                        <div class="input-with-icon">
+                            <input type="number" id="totalDishWeight" placeholder="Вес после готовки">
+                            <i class="fas fa-weight-hanging"></i>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <button class="btn" onclick="addIngredient()">Добавить</button>
+
+                    <button class="btn btn-block" onclick="calculateRecipe()">
+                        <i class="fas fa-calculator"></i>
+                        <span>Рассчитать блюдо</span>
+                    </button>
+
+                    <div id="recipeResult" class="result-card">
+                        <h3>Результат расчета блюда:</h3>
+                        <div id="recipeResultContent"></div>
                     </div>
-                </div>
-
-                <div id="customRecipeProduct">
-                    <h4>Данные продукта:</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                        <input type="text" id="customRecipeName" placeholder="Название">
-                        <input type="number" id="customRecipeProtein" step="0.1" placeholder="Белки">
-                        <input type="number" id="customRecipeCarbs" step="0.1" placeholder="Углеводы">
-                        <input type="number" id="customRecipeFat" step="0.1" placeholder="Жиры">
-                    </div>
-                </div>
-
-                <div id="ingredientsList" class="ingredient-list"></div>
-
-                <div class="form-group">
-                    <label>Общий вес готового блюда (граммы):</label>
-                    <input type="number" id="totalDishWeight" placeholder="Вес после готовки">
-                </div>
-
-                <button class="btn" onclick="calculateRecipe()">Рассчитать блюдо</button>
-
-                <div id="recipeResult" class="result" style="display: none;">
-                    <h3>Результат расчета блюда:</h3>
-                    <div id="recipeResultContent"></div>
                 </div>
             </div>
 
             <!-- Вкладка "База продуктов" -->
             <div id="database" class="tab-content">
-                <h2>База продуктов</h2>
-                <p>Здесь вы можете просмотреть и добавить продукты в базу данных</p>
-                
-                <div class="form-group">
-                    <input type="text" id="searchProduct" placeholder="Поиск продукта..." style="margin-bottom: 20px;">
-                </div>
-
-                <div class="form-group" style="margin-top: 30px;">
-                    <h3>Добавить новый продукт</h3>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 10px; align-items: end;">
-                        <input type="text" id="newProductName" placeholder="Название продукта">
-                        <input type="number" id="newProductProtein" step="0.1" placeholder="Белки">
-                        <input type="number" id="newProductCarbs" step="0.1" placeholder="Углеводы">
-                        <input type="number" id="newProductFat" step="0.1" placeholder="Жиры">
-                        <button class="btn" onclick="addToDatabase()">Добавить</button>
+                <div class="content-card">
+                    <h2><i class="fas fa-database"></i> База продуктов</h2>
+                    <p>Здесь вы можете просмотреть и добавить продукты в базу данных</p>
+                    
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchProduct" placeholder="Поиск продукта...">
                     </div>
+
+                    <div style="margin-top: 30px;">
+                        <h3 style="margin-bottom: 15px;">Добавить новый продукт</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <input type="text" id="newProductName" placeholder="Название продукта">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="newProductProtein" step="0.1" placeholder="Белки (г)">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="newProductCarbs" step="0.1" placeholder="Углеводы (г)">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="newProductFat" step="0.1" placeholder="Жиры (г)">
+                            </div>
+                            <div class="form-group" style="display: flex; align-items: flex-end;">
+                                <button class="btn" onclick="addToDatabase()">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Добавить</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="productsGrid" class="products-grid"></div>
                 </div>
-                
-                <div id="productsGrid"></div>
-                
             </div>
+        </div>
+    </div>
+
+    <button class="floating-action" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Продукт успешно добавлен!</span>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
         </div>
     </div>
 
@@ -156,7 +249,27 @@
         document.addEventListener('DOMContentLoaded', function() {
             populateProductSelects();
             displayProducts();
+            setupEventListeners();
         });
+
+        // Настройка обработчиков событий
+        function setupEventListeners() {
+            // Поиск продуктов
+            document.getElementById('searchProduct').addEventListener('input', function() {
+                filterProducts(this.value);
+            });
+
+            // Показ/скрытие полей ручного ввода
+            document.getElementById('productSelect').addEventListener('change', function() {
+                document.getElementById('customProduct').style.display = 
+                    this.value === 'custom' ? 'block' : 'none';
+            });
+
+            document.getElementById('recipeProductSelect').addEventListener('change', function() {
+                document.getElementById('customRecipeProduct').style.display = 
+                    this.value === 'custom' ? 'block' : 'none';
+            });
+        }
 
         // Функция для переключения вкладок
         function openTab(tabName) {
@@ -178,20 +291,11 @@
             // Найти и активировать соответствующую кнопку
             const activeTabs = document.getElementsByClassName('tab');
             for (let i = 0; i < activeTabs.length; i++) {
-                if (activeTabs[i].textContent.includes(getTabName(tabName))) {
+                if (activeTabs[i].getAttribute('onclick').includes(tabName)) {
                     activeTabs[i].classList.add('active');
                     break;
                 }
             }
-        }
-
-        function getTabName(tabId) {
-            const names = {
-                'single': 'Отдельный продукт',
-                'recipe': 'Сложное блюдо',
-                'database': 'База продуктов'
-            };
-            return names[tabId] || '';
         }
 
         // Заполнение выпадающих списков продуктами
@@ -217,28 +321,64 @@
         }
 
         // Отображение продуктов в базе
-        function displayProducts() {
+        function displayProducts(filteredProducts = null) {
             const grid = document.getElementById('productsGrid');
+            const productsToShow = filteredProducts || products;
+            
+            if (productsToShow.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>Продукты не найдены</h3>
+                        <p>Попробуйте изменить поисковый запрос</p>
+                    </div>
+                `;
+                return;
+            }
+            
             grid.innerHTML = '';
             
-            products.forEach(product => {
+            productsToShow.forEach(product => {
                 const calories = calculateCalories(product.protein, product.carbs, product.fat);
                 
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
                     <div class="product-header">
-                        <h4>${product.name}</h4>
+                        <div class="product-name">${product.name}</div>
+                        <div class="calories">${calories} ккал</div>
                     </div>
-                    <div class="macros">
-                        <div class="macro-item protein">Б: ${product.protein}g</div>
-                        <div class="macro-item carbs">У: ${product.carbs}g</div>
-                        <div class="macro-item fat">Ж: ${product.fat}g</div>
-                        <div class="macro-item calories">${calories} ккал</div>
+                    <div class="macros-grid">
+                        <div class="macro-card macro-protein">
+                            <div>Белки</div>
+                            <div class="macro-value">${product.protein}g</div>
+                        </div>
+                        <div class="macro-card macro-carbs">
+                            <div>Углеводы</div>
+                            <div class="macro-value">${product.carbs}g</div>
+                        </div>
+                        <div class="macro-card macro-fat">
+                            <div>Жиры</div>
+                            <div class="macro-value">${product.fat}g</div>
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        // Фильтрация продуктов
+        function filterProducts(query) {
+            if (!query) {
+                displayProducts();
+                return;
+            }
+            
+            const filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            displayProducts(filteredProducts);
         }
 
         // Расчет калорий по формуле
@@ -265,7 +405,7 @@
                 // Выбор из базы
                 const selectedProduct = products.find(p => p.name === productSelect.value);
                 if (!selectedProduct) {
-                    alert('Пожалуйста, выберите продукт');
+                    showNotification('Пожалуйста, выберите продукт', 'error');
                     return;
                 }
                 product = selectedProduct;
@@ -281,15 +421,27 @@
             const resultDiv = document.getElementById('singleResultContent');
             resultDiv.innerHTML = `
                 <h4>${product.name} - ${weight}г</h4>
-                <div class="macros">
-                    <div class="macro-item protein">Белки: ${proteinTotal}g</div>
-                    <div class="macro-item carbs">Углеводы: ${carbsTotal}g</div>
-                    <div class="macro-item fat">Жиры: ${fatTotal}g</div>
-                    <div class="macro-item calories">Калории: ${caloriesTotal} ккал</div>
+                <div class="macros-grid">
+                    <div class="macro-card macro-protein">
+                        <div>Белки</div>
+                        <div class="macro-value">${proteinTotal}g</div>
+                    </div>
+                    <div class="macro-card macro-carbs">
+                        <div>Углеводы</div>
+                        <div class="macro-value">${carbsTotal}g</div>
+                    </div>
+                    <div class="macro-card macro-fat">
+                        <div>Жиры</div>
+                        <div class="macro-value">${fatTotal}g</div>
+                    </div>
+                    <div class="macro-card macro-calories">
+                        <div>Калории</div>
+                        <div class="macro-value">${caloriesTotal}</div>
+                    </div>
                 </div>
             `;
             
-            document.getElementById('singleResult').style.display = 'block';
+            document.getElementById('singleResult').classList.add('active');
         }
 
         // Добавление ингредиента в рецепт
@@ -298,7 +450,7 @@
             const weight = parseFloat(document.getElementById('recipeWeight').value);
             
             if (!weight || weight <= 0) {
-                alert('Пожалуйста, введите вес продукта');
+                showNotification('Пожалуйста, введите вес продукта', 'error');
                 return;
             }
             
@@ -311,7 +463,7 @@
                 const name = document.getElementById('customRecipeName').value || 'Ингредиент';
                 
                 if (!name) {
-                    alert('Пожалуйста, введите название продукта');
+                    showNotification('Пожалуйста, введите название продукта', 'error');
                     return;
                 }
                 
@@ -319,7 +471,7 @@
             } else {
                 const selectedProduct = products.find(p => p.name === productSelect.value);
                 if (!selectedProduct) {
-                    alert('Пожалуйста, выберите продукт');
+                    showNotification('Пожалуйста, выберите продукт', 'error');
                     return;
                 }
                 product = selectedProduct;
@@ -336,6 +488,8 @@
             document.getElementById('recipeWeight').value = '';
             document.getElementById('customRecipeProduct').style.display = 'none';
             productSelect.value = '';
+            
+            showNotification('Ингредиент добавлен');
         }
 
         // Обновление списка ингредиентов
@@ -343,16 +497,35 @@
             const list = document.getElementById('ingredientsList');
             list.innerHTML = '';
             
+            if (recipeIngredients.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>Добавьте ингредиенты для расчета</p>
+                    </div>
+                `;
+                return;
+            }
+            
             recipeIngredients.forEach((ingredient, index) => {
+                const calories = calculateCalories(ingredient.protein, ingredient.carbs, ingredient.fat);
+                
                 const item = document.createElement('div');
                 item.className = 'ingredient-item';
                 item.innerHTML = `
-                    <span style="flex: 2;">${ingredient.name}</span>
-                    <span>${ingredient.weight}г</span>
-                    <span>Б: ${ingredient.protein}g</span>
-                    <span>У: ${ingredient.carbs}g</span>
-                    <span>Ж: ${ingredient.fat}g</span>
-                    <button onclick="removeIngredient(${index})" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">×</button>
+                    <div class="ingredient-info">
+                        <div><strong>${ingredient.name}</strong></div>
+                        <div>${ingredient.weight}г</div>
+                        <div>Б: ${ingredient.protein}g</div>
+                        <div>У: ${ingredient.carbs}g</div>
+                        <div>Ж: ${ingredient.fat}g</div>
+                        <div>${calories} ккал</div>
+                    </div>
+                    <div class="ingredient-actions">
+                        <button class="btn-icon" onclick="removeIngredient(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 `;
                 list.appendChild(item);
             });
@@ -362,18 +535,19 @@
         function removeIngredient(index) {
             recipeIngredients.splice(index, 1);
             updateIngredientsList();
+            showNotification('Ингредиент удален');
         }
 
         // Расчет для сложного блюда
         function calculateRecipe() {
             if (recipeIngredients.length === 0) {
-                alert('Добавьте хотя бы один ингредиент');
+                showNotification('Добавьте хотя бы один ингредиент', 'error');
                 return;
             }
             
             const totalDishWeight = parseFloat(document.getElementById('totalDishWeight').value);
             if (!totalDishWeight || totalDishWeight <= 0) {
-                alert('Пожалуйста, введите общий вес готового блюда');
+                showNotification('Пожалуйста, введите общий вес готового блюда', 'error');
                 return;
             }
             
@@ -402,26 +576,50 @@
             resultDiv.innerHTML = `
                 <div class="summary">
                     <h4>Общая питательная ценность всего блюда (${totalDishWeight}г):</h4>
-                    <div class="macros">
-                        <div class="macro-item protein">Белки: ${totalProtein.toFixed(1)}g</div>
-                        <div class="macro-item carbs">Углеводы: ${totalCarbs.toFixed(1)}g</div>
-                        <div class="macro-item fat">Жиры: ${totalFat.toFixed(1)}g</div>
-                        <div class="macro-item calories">Калории: ${totalCalories.toFixed(1)} ккал</div>
+                    <div class="macros-grid">
+                        <div class="macro-card macro-protein">
+                            <div>Белки</div>
+                            <div class="macro-value">${totalProtein.toFixed(1)}g</div>
+                        </div>
+                        <div class="macro-card macro-carbs">
+                            <div>Углеводы</div>
+                            <div class="macro-value">${totalCarbs.toFixed(1)}g</div>
+                        </div>
+                        <div class="macro-card macro-fat">
+                            <div>Жиры</div>
+                            <div class="macro-value">${totalFat.toFixed(1)}g</div>
+                        </div>
+                        <div class="macro-card macro-calories">
+                            <div>Калории</div>
+                            <div class="macro-value">${totalCalories.toFixed(1)}</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div style="margin-top: 20px;">
+                <div style="margin-top: 25px;">
                     <h4>Питательная ценность на 100г готового блюда:</h4>
-                    <div class="macros">
-                        <div class="macro-item protein">Белки: ${proteinPer100g}g</div>
-                        <div class="macro-item carbs">Углеводы: ${carbsPer100g}g</div>
-                        <div class="macro-item fat">Жиры: ${fatPer100g}g</div>
-                        <div class="macro-item calories">Калории: ${caloriesPer100g} ккал</div>
+                    <div class="macros-grid">
+                        <div class="macro-card macro-protein">
+                            <div>Белки</div>
+                            <div class="macro-value">${proteinPer100g}g</div>
+                        </div>
+                        <div class="macro-card macro-carbs">
+                            <div>Углеводы</div>
+                            <div class="macro-value">${carbsPer100g}g</div>
+                        </div>
+                        <div class="macro-card macro-fat">
+                            <div>Жиры</div>
+                            <div class="macro-value">${fatPer100g}g</div>
+                        </div>
+                        <div class="macro-card macro-calories">
+                            <div>Калории</div>
+                            <div class="macro-value">${caloriesPer100g}</div>
+                        </div>
                     </div>
                 </div>
             `;
             
-            document.getElementById('recipeResult').style.display = 'block';
+            document.getElementById('recipeResult').classList.add('active');
         }
 
         // Добавление продукта в базу
@@ -432,13 +630,13 @@
             const fat = parseFloat(document.getElementById('newProductFat').value) || 0;
             
             if (!name) {
-                alert('Пожалуйста, введите название продукта');
+                showNotification('Пожалуйста, введите название продукта', 'error');
                 return;
             }
             
             // Проверка на дубликат
             if (products.find(p => p.name.toLowerCase() === name.toLowerCase())) {
-                alert('Этот продукт уже есть в базе');
+                showNotification('Этот продукт уже есть в базе', 'error');
                 return;
             }
             
@@ -455,19 +653,38 @@
             document.getElementById('newProductCarbs').value = '';
             document.getElementById('newProductFat').value = '';
             
-            alert('Продукт успешно добавлен в базу!');
+            showNotification('Продукт успешно добавлен в базу!');
         }
 
-        // Обработчики для показа/скрытия полей ручного ввода
-        document.getElementById('productSelect').addEventListener('change', function() {
-            document.getElementById('customProduct').style.display = 
-                this.value === 'custom' ? 'block' : 'none';
-        });
+        // Показать уведомление
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            
+            // Установка цвета в зависимости от типа
+            if (type === 'error') {
+                notification.style.background = 'var(--error)';
+            } else {
+                notification.style.background = 'var(--success)';
+            }
+            
+            notification.classList.add('active');
+            
+            // Автоматическое скрытие через 3 секунды
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 3000);
+        }
 
-        document.getElementById('recipeProductSelect').addEventListener('change', function() {
-            document.getElementById('customRecipeProduct').style.display = 
-                this.value === 'custom' ? 'block' : 'none';
-        });
+        // Прокрутка к верху страницы
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
     </script>
 </body>
 </html>
