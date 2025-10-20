@@ -239,7 +239,7 @@ input:focus, select:focus {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px;
+    padding: 10px;
     background: var(--bg-main);
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -255,10 +255,15 @@ input:focus, select:focus {
 
 .product-main-info {
     flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
     min-width: 150px;
 }
 
 .product-name {
+    text-align: start;
     font-weight: 600;
     font-size: 1rem;
     margin-bottom: 4px;
@@ -266,6 +271,7 @@ input:focus, select:focus {
 }
 
 .product-calories {
+    text-align: start;
     color: var(--accent);
     font-weight: 600;
     font-size: 0.9rem;
@@ -311,8 +317,11 @@ input:focus, select:focus {
 
 .product-actions {
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 8px;
     min-width: 40px;
+    height: 100%;
 }
 
 .btn-icon {
@@ -338,7 +347,7 @@ input:focus, select:focus {
 /* Адаптивность для мобильных */
 @media (max-width: 768px) {
     .product-item {
-        flex-direction: column;
+        flex-direction: row;
         align-items: stretch;
         gap: 12px;
         text-align: center;
@@ -355,7 +364,7 @@ input:focus, select:focus {
     .macros-line {
         gap: 15px;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: start;
     }
     
     .product-actions {
@@ -512,8 +521,7 @@ input:focus, select:focus {
     }
     
     .product-item {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
         gap: 10px;
     }
     
