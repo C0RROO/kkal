@@ -215,11 +215,7 @@
             </div>
         </div>
     </div>
-
-    <button class="floating-action" onclick="scrollToTop()">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
+    
     <div id="notification" class="notification">
         <i class="fas fa-check-circle"></i>
         <span id="notificationText">Продукт успешно добавлен!</span>
@@ -676,14 +672,6 @@
             setTimeout(() => {
                 notification.classList.remove('active');
             }, 3000);
-        }
-
-        // Прокрутка к верху страницы
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
         }
     </script>
 </body>
