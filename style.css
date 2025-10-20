@@ -561,31 +561,6 @@ input:focus, select:focus {
     }
 }
 
-/* Дополнительные стили для улучшения UX */
-.floating-action {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    cursor: pointer;
-    transition: var(--transition);
-    z-index: 100;
-    border: none;
-}
-
-.floating-action:hover {
-    transform: scale(1.1);
-}
-
 .notification {
     position: fixed;
     top: 20px;
